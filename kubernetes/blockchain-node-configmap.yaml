@@ -1,1 +1,56 @@
 # ConfigMap for blockchain node
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blockchain-node-config
+  namespace: safeshipping
+data:
+  geth-config.toml: |
+    [server]
+    Datadir = "/data/ethereum"
+    HTTPHost = "0.0.0.0"
+    HTTPPort = 8545
+    HTTPVirtualHosts = ["*"]
+    HTTPModules = ["eth", "net", "web3", "txpool"]
+    WSHost = "0.0.0.0"
+    WSPort = 8546
+    WSModules = ["eth", "net", "web3", "txpool"]
+
+    [p2p]
+    MaxPeers = 50
+    NoDiscovery = false
+
+    [eth]
+    SyncMode = "snap"
+    NoPruning = false
+    DatabaseCache = 512
+
+    [metrics]
+    Enabled = true
+    HTTP = "0.0.0.0"
+    Port = 6060
+  
+  start-node.sh: |
+    #!/bin/bash
+    # Start script for Ethereum node
+
+    # Set default network if not provided
+    NETWORK=${NETWORK:-mainnet}
+
+    # Start geth with appropriate flags based on network
+    case "$NETWORK" in
+      "mainnet")
+        exec geth --config /config/geth-config.toml --datadir /data/ethereum --http --http.addr "0.0.0.0" --http.api "eth,net,web3,txpool" --ws --ws.addr "0.0.0.0" --ws.api "eth,net,web3,txpool"
+        ;;
+      "testnet")
+        exec geth --goerli --config /config/geth-config.toml --datadir /data/ethereum --http --http.addr "0.0.0.0" --http.api "eth,net,web3,txpool" --ws --ws.addr "0.0.0.0" --ws.api "eth,net,web3,txpool"
+        ;;
+      "private")
+        exec geth --datadir /data/ethereum/private --networkid 1337 --http --http.addr "0.0.0.0" --http.api "eth,net,web3,txpool,personal,miner" --ws --ws.addr "0.0.0.0" --ws.api "eth,net,web3,txpool,personal,miner" --mine --miner.threads=1 --allow-insecure-unlock
+        ;;
+      *)
+        echo "Unknown network: $NETWORK"
+        echo "Supported networks: mainnet, testnet, private"
+        exit 1
+        ;;
+    esac

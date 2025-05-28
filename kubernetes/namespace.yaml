@@ -1,1 +1,8 @@
 # Namespace definition
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: safeshipping
+  labels:
+    name: safeshipping
+    app: safeshipping

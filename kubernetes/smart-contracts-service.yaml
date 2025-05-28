@@ -1,0 +1,14 @@
+# Service for smart contracts
+apiVersion: v1
+kind: Service
+metadata:
+  name: smart-contracts
+  namespace: safeshipping
+spec:
+  selector:
+    app: smart-contracts
+  ports:
+  - name: http
+    port: 8545
+    targetPort: 8545
+  type: ClusterIP

@@ -1,0 +1,35 @@
+# ConfigMap for backend API
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend-api-config
+  namespace: safeshipping
+data:
+  config.json: |
+    {
+      "server": {
+        "port": 4000,
+        "cors": {
+          "origin": "*",
+          "methods": ["GET", "POST", "PUT", "DELETE"]
+        }
+      },
+      "blockchain": {
+        "nodeUrl": "http://blockchain-node:8545",
+        "contracts": {
+          "billOfLading": "0x1234567890abcdef1234567890abcdef12345678",
+          "shipmentTracking": "0xabcdef1234567890abcdef1234567890abcdef12"
+        }
+      },
+      "oracle": {
+        "serviceUrl": "http://oracle-service:3000"
+      },
+      "security": {
+        "jwtSecret": "${JWT_SECRET}",
+        "tokenExpiration": "24h"
+      },
+      "logging": {
+        "level": "info",
+        "format": "json"
+      }
+    }

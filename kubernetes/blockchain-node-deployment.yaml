@@ -1,0 +1,69 @@
+# Deployment for blockchain node
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blockchain-node
+  namespace: safeshipping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: blockchain-node
+  strategy:
+    type: Recreate  # Ensure only one instance runs at a time due to volume access
+  template:
+    metadata:
+      labels:
+        app: blockchain-node
+    spec:
+      containers:
+      - name: blockchain-node
+        image: ethereum/client-go:stable
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/sh"]
+        args: ["-c", "chmod +x /config/start-node.sh && /config/start-node.sh"]
+        env:
+        - name: NETWORK
+          value: "mainnet"  # Can be changed to testnet or private
+        ports:
+        - containerPort: 8545
+          name: http-rpc
+        - containerPort: 8546
+          name: websocket
+        - containerPort: 30303
+          name: p2p-tcp
+        - containerPort: 30303
+          protocol: UDP
+          name: p2p-udp
+        resources:
+          requests:
+            cpu: "1"
+            memory: "2Gi"
+          limits:
+            cpu: "2"
+            memory: "4Gi"
+        volumeMounts:
+        - name: ethereum-data
+          mountPath: /data/ethereum
+        - name: config-volume
+          mountPath: /config
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8545
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8545
+          initialDelaySeconds: 60
+          periodSeconds: 20
+      volumes:
+      - name: ethereum-data
+        persistentVolumeClaim:
+          claimName: ethereum-data-pvc
+      - name: config-volume
+        configMap:
+          name: blockchain-node-config
+          defaultMode: 0755

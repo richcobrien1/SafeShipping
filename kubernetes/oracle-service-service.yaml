@@ -1,0 +1,14 @@
+# Service for oracle service
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle-service
+  namespace: safeshipping
+spec:
+  selector:
+    app: oracle-service
+  ports:
+  - name: http
+    port: 3000
+    targetPort: 3000
+  type: ClusterIP

@@ -1,0 +1,25 @@
+# ConfigMap for oracle service
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oracle-service-config
+  namespace: safeshipping
+data:
+  config.json: |
+    {
+      "ethereum": {
+        "nodeUrl": "http://blockchain-node:8545",
+        "chainId": 1,
+        "confirmations": 3
+      },
+      "oracle": {
+        "updateInterval": 60,
+        "gasLimit": 500000,
+        "retryAttempts": 3,
+        "retryDelay": 15
+      },
+      "logging": {
+        "level": "info",
+        "format": "json"
+      }
+    }

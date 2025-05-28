@@ -1,0 +1,38 @@
+# ConfigMap for security service
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-service-config
+  namespace: safeshipping
+data:
+  config.json: |
+    {
+      "server": {
+        "port": 5000,
+        "cors": {
+          "origin": "*",
+          "methods": ["GET", "POST", "PUT", "DELETE"]
+        }
+      },
+      "security": {
+        "encryption": {
+          "algorithm": "aes-256-gcm",
+          "keyRotationDays": 30
+        },
+        "audit": {
+          "enabled": true,
+          "storageRetentionDays": 90
+        },
+        "gdpr": {
+          "enabled": true,
+          "dataMinimization": true
+        }
+      },
+      "backend": {
+        "apiUrl": "http://backend-api:4000"
+      },
+      "logging": {
+        "level": "info",
+        "format": "json"
+      }
+    }

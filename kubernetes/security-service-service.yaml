@@ -1,0 +1,14 @@
+# Service for security service
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-service
+  namespace: safeshipping
+spec:
+  selector:
+    app: security-service
+  ports:
+  - name: http
+    port: 5000
+    targetPort: 5000
+  type: ClusterIP

@@ -1,0 +1,14 @@
+# Service for backend API
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-api
+  namespace: safeshipping
+spec:
+  selector:
+    app: backend-api
+  ports:
+  - name: http
+    port: 4000
+    targetPort: 4000
+  type: ClusterIP

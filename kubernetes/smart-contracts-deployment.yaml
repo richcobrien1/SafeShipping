@@ -1,0 +1,53 @@
+# Deployment for smart contracts
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smart-contracts
+  namespace: safeshipping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: smart-contracts
+  template:
+    metadata:
+      labels:
+        app: smart-contracts
+    spec:
+      containers:
+      - name: smart-contracts
+        image: safeshipping/smart-contracts:latest
+        imagePullPolicy: Always
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: ETHEREUM_NODE_URL
+          value: "http://blockchain-node:8545"
+        ports:
+        - containerPort: 8545
+          name: http
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+        - name: contracts-volume
+          mountPath: /app/contracts
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8545
+          initialDelaySeconds: 10
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8545
+          initialDelaySeconds: 20
+          periodSeconds: 15
+      volumes:
+      - name: contracts-volume
+        emptyDir: {}
