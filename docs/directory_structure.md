@@ -31,6 +31,12 @@ SafeShipping/
 │   └── test/                 # Contract tests
 ├── deployment/               # Deployment scripts and configurations
 ├── docker/                   # Docker configurations
+│   ├── backend-api/          # Backend API container
+│   ├── blockchain-node/      # Blockchain Node container
+│   ├── frontend/             # Frontend container
+│   ├── oracle-service/       # Oracle-service container
+│   ├── security-service/     # Security-service container
+│   └── smart-contracts/      # Smart-contracts container
 ├── docs/                     # Documentation
 │   ├── api/                  # API documentation
 │   ├── architecture/         # Architecture diagrams and descriptions
