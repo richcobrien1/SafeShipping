@@ -1,0 +1,63 @@
+services:
+  backend_api:
+    build: ./backend-api
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./backend-api:/app
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+  blockchain_node:
+    build: ./blockchain-node
+    ports:
+      - "8545:8545"
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+  oracle_service:
+    build:
+      context: ./oracle-service
+      dockerfile: Dockerfile
+    ports:
+      - "9200:9200"
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+  security_service:
+    build: ./security-service
+    ports:
+      - "3000:3000"
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+  smart_contracts:
+    build:
+      context: ./smart-contracts
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - app_network
+    command: ["node", "server.js"]
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  db_data:
