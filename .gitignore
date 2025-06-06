@@ -69,12 +69,12 @@ grammarly/       # Grammarly desktop app data
 # /Adobe Premiere Pro Preview Files/
 
 # Video Production
-# *.mov          # Raw video files (large!)
-# *.mp4          # Rendered videos
+*.mov          # Raw video files (large!)
+*.mp4          # Rendered videos
 
 # Audio Files
-# *.wav          # Uncompressed audio
-# *.mp3          # Compressed audio
+*.wav          # Uncompressed audio
+*.mp3          # Compressed audio
 
 # Research Data
 # /raw-data/     # Unprocessed research data
