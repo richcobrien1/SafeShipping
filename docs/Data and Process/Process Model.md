@@ -1,12 +1,10 @@
-🚀 Draft a SafeShipping API that captures shipment records in the correct order for each transport category—ensuring seamless blockchain-based tracking.
-
-📜 SafeShipping API - Rough Draft
+# 🚀 SafeShipping API
 This API will handle shipping, transport, and delivery data across cargo ships, airplanes, semi-trucks, couriers, and mail carriers—fully IoT-integrated.
 
-🚢 Cargo Ship Shipment Process
-1️⃣ Shipment Created
-🔹 POST /api/shipping/cargo
-
+## 🚢 Cargo Ship Shipment Process
+### 1️⃣ Shipment Created
+### 🔹 POST /api/shipping/cargo
+```
 json
 {
   "shipment_id": "ABC123",
@@ -18,10 +16,10 @@ json
   "contract_hash": "0xabcde123",
   "customs_clearance": "Pending"
 }
-
-2️⃣ In-Transit Updates
-🔹 PATCH /api/shipping/cargo/{shipment_id}/status
-
+```
+### 2️⃣ In-Transit Updates
+### 🔹 PATCH /api/shipping/cargo/{shipment_id}/status
+```
 json
 {
   "status": "In Transit",
@@ -32,10 +30,10 @@ json
   "last_port": "Singapore",
   "ETA_update": "2025-06-19T18:00:00Z"
 }
-
-3️⃣ Delivery Confirmation
-🔹 POST /api/shipping/cargo/{shipment_id}/delivery
-
+```
+### 3️⃣ Delivery Confirmation
+### 🔹 POST /api/shipping/cargo/{shipment_id}/delivery
+```
 json
 {
   "status": "Delivered",
@@ -44,11 +42,11 @@ json
   "receiver_signature": "0xsignature123",
   "delivery_confirmation_hash": "0xdeliveryhash456"
 }
-
-✈️ Air Cargo Shipment Process
-1️⃣ Flight Scheduled
-🔹 POST /api/shipping/air
-
+```
+## ✈️ Air Cargo Shipment Process
+### 1️⃣ Flight Scheduled
+### 🔹 POST /api/shipping/air
+```
 json
 {
   "shipment_id": "FL789",
@@ -61,10 +59,10 @@ json
   "fragility": "High",
   "tracking_enabled": true
 }
-
-2️⃣ In-Transit Tracking
-🔹 PATCH /api/shipping/air/{shipment_id}/status
-
+```
+### 2️⃣ In-Transit Tracking
+### 🔹 PATCH /api/shipping/air/{shipment_id}/status
+```
 json
 {
   "status": "In Transit",
@@ -75,10 +73,10 @@ json
   "shipment_condition": "Stable",
   "ETA_update": "2025-06-08T14:20:00Z"
 }
-
-3️⃣ Final Delivery & Customs Clearance
-🔹 POST /api/shipping/air/{shipment_id}/delivery
-
+```
+### 3️⃣ Final Delivery & Customs Clearance
+### 🔹 POST /api/shipping/air/{shipment_id}/delivery
+```
 json
 {
   "status": "Delivered",
@@ -87,11 +85,11 @@ json
   "receiver_signature": "0xsignaturexyz",
   "payment_hash": "0xpayment789"
 }
-
-🚛 Semi-Truck Freight Process
-1️⃣ Load Pickup & Dispatch
-🔹 POST /api/shipping/truck
-
+```
+## 🚛 Semi-Truck Freight Process
+### 1️⃣ Load Pickup & Dispatch
+### 🔹 POST /api/shipping/truck
+```
 json
 {
   "shipment_id": "TRK567",
@@ -102,10 +100,10 @@ json
   "departure_time": "2025-06-10T08:00:00Z",
   "estimated_arrival": "2025-06-12T18:00:00Z"
 }
-
-2️⃣ Real-Time IoT Tracking (GPS, Sensors)
-🔹 PATCH /api/shipping/truck/{shipment_id}/status
-
+```
+### 2️⃣ Real-Time IoT Tracking (GPS, Sensors)
+### 🔹 PATCH /api/shipping/truck/{shipment_id}/status
+```
 json
 {
   "status": "En Route",
@@ -115,10 +113,10 @@ json
   "seal_integrity": "Secure",
   "ETA_update": "2025-06-12T17:30:00Z"
 }
-
-3️⃣ Delivery Confirmation
-🔹 POST /api/shipping/truck/{shipment_id}/delivery
-
+```
+### 3️⃣ Delivery Confirmation
+### 🔹 POST /api/shipping/truck/{shipment_id}/delivery
+```
 json
 {
   "status": "Delivered",
@@ -127,11 +125,11 @@ json
   "damage_report": "None",
   "final_weight_check": "30,000 lbs"
 }
-
-📦 Courier & Mail Delivery Process
-1️⃣ Package Registered
-🔹 POST /api/shipping/courier
-
+```
+## 📦 Courier & Mail Delivery Process
+### 1️⃣ Package Registered
+### 🔹 POST /api/shipping/courier
+```
 json
 {
   "shipment_id": "CR981",
@@ -144,10 +142,10 @@ json
   "weight": "5 lbs",
   "priority": "Overnight"
 }
-
-2️⃣ Last-Mile GPS Tracking
-🔹 PATCH /api/shipping/courier/{shipment_id}/status
-
+```
+### 2️⃣ Last-Mile GPS Tracking
+### 🔹 PATCH /api/shipping/courier/{shipment_id}/status
+```
 json
 {
   "status": "Out for Delivery",
@@ -155,10 +153,10 @@ json
   "current_gps": "40.7128,-74.0060",
   "ETA": "2025-06-09T10:00:00Z"
 }
-
-3️⃣ Final Handover & Receipt Confirmation
-🔹 POST /api/shipping/courier/{shipment_id}/delivery
-
+```
+### 3️⃣ Final Handover & Receipt Confirmation
+### 🔹 POST /api/shipping/courier/{shipment_id}/delivery
+```
 json
 {
   "status": "Delivered",
@@ -166,6 +164,9 @@ json
   "receiver_signature": "0xsignaturecourier",
   "proof_of_delivery_photo": "url_to_image.jpg"
 }
-
-🚀 Key API Features
-✔ Process-Oriented API Structure: Each transport mode follows a logical sequence. ✔ Blockchain-Immutable Shipment Records: Smart contract hashes ensure data integrity. ✔ IoT-Enabled Real-Time Monitoring: Sensors provide live tracking for temperature, vibration, seal status, and geolocation. ✔ Cross-Platform Compatibility: Works for cargo, air, truck, and last-mile courier logistics.
+```
+## 🚀 Key API Features
+✔ Process-Oriented API Structure: Each transport mode follows a logical sequence. 
+✔ Blockchain-Immutable Shipment Records: Smart contract hashes ensure data integrity. 
+✔ IoT-Enabled Real-Time Monitoring: Sensors provide live tracking for temperature, vibration, seal status, and geolocation. 
+✔ Cross-Platform Compatibility: Works for cargo, air, truck, and last-mile courier logistics.
