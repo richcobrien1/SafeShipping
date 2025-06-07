@@ -14,13 +14,13 @@ The logistics industry is plagued by inefficiencies, high costs, and a lack of t
 
 ## 3. Proposed Solution
 
-**SafeShipping with GitCoin:** Our solution leverages GitCoin’s platform to:
+**Our SafeShipping solution leverages GitCoin’s platform to:**
 
-**Crowdsource Development:** Engage a global community of developers to contribute to SafeShipping’s open-source codebase.
+- **Crowdsource Development:** Engage a global community of developers to contribute to SafeShipping’s open-source codebase.
 
-**Decentralized Funding:** Utilize GitCoin grants to secure funding for key development milestones.
+- **Decentralized Funding:** Utilize GitCoin grants to secure funding for key development milestones.
 
-**Community-Driven Innovation:** Foster collaboration among stakeholders to drive continuous improvement and adoption.
+- **Community-Driven Innovation:** Foster collaboration among stakeholders to drive continuous improvement and adoption.
 
 **Key Technical Highlights:**
 

@@ -109,7 +109,7 @@ Database schema migrations and smart contract deployment scripts.
 ## Next Steps
 
 1. Initialize configuration files for each component
-2. Set up development environment with Docker
+2. Set up development environment with Terraform, Kubernetes, Docker
 3. Implement core smart contracts
 4. Develop backend API services
 5. Create frontend user interface
