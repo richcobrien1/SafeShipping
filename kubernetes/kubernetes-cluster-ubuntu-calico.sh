@@ -127,3 +127,14 @@ curl -sSL http://$WSL_IP:6443 || {
 }
 
 echo "✅ Kubernetes setup complete with modified Calico!"
+
+echo "✅ Deploying SafeShipping Application..."
+kubectl apply -f frontend-deployment.yaml
+kubectl apply -f backend-deployment.yaml
+kubectl apply -f frontend-service.yaml
+kubectl apply -f backend-service.yaml
+
+kubectl get pods
+kubectl get services
+
+echo "🚀 SafeShipping cluster hub and nodes setup complete!"
