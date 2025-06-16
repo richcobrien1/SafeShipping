@@ -9,7 +9,7 @@ This repository contains a comprehensive directory structure for developing and 
 ## Key Components
 
 - **Smart Contracts**: Blockchain contracts for secure, transparent shipping workflows
-- **WASM Assembly Language**: Web Assembly Language for performance and resiliency
+- **WASM Assembly Language**: Web Assembly Language for performance and efficiency
 - **Backend API**: Server-side application for business logic and data management
 - **Frontend Application**: User interface for interacting with the platform
 - **IoT Integration**: Components for connecting with IoT devices and sensors
