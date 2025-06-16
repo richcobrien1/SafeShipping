@@ -1,4 +1,4 @@
-# SafeShipping - 05/28/2025 04:04PM
+# SafeShipping - 06/16/2025 06:16AM
 
 SafeShipping is a blockchain-based logistics platform using smart contracts, decentralized oracles, and IoT integrations to automate, secure, and verify global shipping workflows.
 
