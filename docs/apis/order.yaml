@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: SafeShipping Shipping Order API
+  description: API for creating and managing shipping orders with blockchain integration
+  version: 1.0.0
+servers:
+  - url: https://api.safeshipping.io/v1
+paths:
+  /orders:
+    post:
+      summary: Create a new shipping order
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShippingOrder'
+      responses:
+        '201':
+          description: Order successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderResponse'
+  /orders/{order_id}:
+    get:
+      summary: Get order details
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order detail retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShippingOrder'
+    patch:
+      summary: Update order status
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [created, in_transit, delivered, cancelled]
+      responses:
+        '200':
+          description: Order status updated
+    delete:
+      summary: Cancel an order
+      parameters:
+        - name: order_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Order successfully cancelled
+components:
+  schemas:
+    ShippingOrder:
+      type: object
+      required: [sender, recipient, package]
+      properties:
+        sender:
+          $ref: '#/components/schemas/Contact'
+        recipient:
+          $ref: '#/components/schemas/Contact'
