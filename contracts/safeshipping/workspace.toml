@@ -1,0 +1,5 @@
+[workspace]
+members = [
+  "safeshipping",
+  # add other contracts as needed
+]
