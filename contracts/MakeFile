@@ -1,0 +1,3 @@
+wasm:
+    cd safeshipping && wasm-pack build --target nodejs
+# Add more contracts as needed
