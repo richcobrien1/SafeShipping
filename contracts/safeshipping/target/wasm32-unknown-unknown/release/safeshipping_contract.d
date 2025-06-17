@@ -1,1 +1,1 @@
-C:\Users\richc\Projects\SafeShipping\safeshipping_contract\target\wasm32-unknown-unknown\release\safeshipping_contract.wasm: C:\Users\richc\Projects\SafeShipping\safeshipping_contract\src\lib.rs
+C:\Users\richc\Projects\safeshipping\contracts\safeshipping\target\wasm32-unknown-unknown\release\safeshipping_contract.wasm: C:\Users\richc\Projects\safeshipping\contracts\safeshipping\src\lib.rs

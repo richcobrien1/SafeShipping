@@ -1,0 +1,10 @@
+[workspace]
+members = [
+  "core",
+  "interfaces",
+  "libraries",
+  "mocks",
+  "oracles",
+  "safeshipping",
+  "test"
+]
