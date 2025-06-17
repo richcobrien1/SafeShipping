@@ -1,6 +1,6 @@
 use schemars::JsonSchema;
 use serde::{Deserialize, Serialize};
-use wasm_bindgen::prelude::*;
+use wasm_bindgen::prelude::{*, JsValue};
 use regex::Regex;
 use once_cell::sync::Lazy;
 use validator::{Validate, ValidationError, ValidationErrors};
@@ -34,6 +34,8 @@ pub fn create_order_log(order_data: &str) -> String {
     if let Err(e) = order.validate() {
         return format!("Validation errors:\n{}", format_validation_errors(e));
     }
+
+    emit_order_created_log(&order);
 
     format!(
         "📦 {} → {} | Tracking: {}",
@@ -109,3 +111,19 @@ pub struct Package {
 
     pub insured: bool,
 }
+
+fn emit_order_created_log(order: &ShippingOrder) {
+    let payload = serde_json::json!({
+        "event": "ShippingOrderCreated",
+        "sender": order.sender.name,
+        "recipient": order.recipient.name,
+        "tracking_id": order.metadata.external_tracking_id,
+        "insured": order.package.insured,
+        "dimensions_cm": order.package.dimensions_cm,
+        "weight_kg": order.package.weight_kg,
+        "timestamp_utc": chrono::Utc::now().to_rfc3339()
+    });
+
+    web_sys::console::log_1(&JsValue::from_str(&payload.to_string()));
+}
+
