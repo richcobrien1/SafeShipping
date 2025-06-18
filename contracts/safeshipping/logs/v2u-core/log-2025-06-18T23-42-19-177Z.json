@@ -1,0 +1,15 @@
+{
+  "event_id": "74ac1978-f12e-4352-895f-4512c167b4c0",
+  "event": "orderCreated",
+  "sender": "Tenant A",
+  "recipient": "Receiver",
+  "tracking_id": "TRACK-900-TEST",
+  "insured": true,
+  "dimensions_cm": [
+    30,
+    20,
+    15
+  ],
+  "weight_kg": 2.5,
+  "timestamp_utc": "2025-06-18T23:42:19.175+00:00"
+}

@@ -1,7 +1,9 @@
-const wasm = require('./pkg');
+const wasm = require("./pkg");
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const http = require("http");
+const https = require("https");
 
 function hashLog(log) {
   return crypto.createHash("sha256").update(JSON.stringify(log)).digest("hex");
@@ -22,14 +24,17 @@ function appendToStream(log, dir) {
   console.log(`🧾 Appended to ${streamPath}`);
 }
 
-function emitToWebhook(log, url) {
+function emitToWebhook(log, url, logDir = null) {
   if (!url) return;
-  const https = require("https");
-  const data = JSON.stringify(log);
+
   const parsedUrl = new URL(url);
+  const isHttps = parsedUrl.protocol === "https:";
+  const protocol = isHttps ? https : http;
+
+  const data = JSON.stringify(log);
   const options = {
     hostname: parsedUrl.hostname,
-    port: parsedUrl.port || 443,
+    port: parsedUrl.port || (isHttps ? 443 : 80),
     path: parsedUrl.pathname,
     method: "POST",
     headers: {
@@ -38,24 +43,28 @@ function emitToWebhook(log, url) {
     }
   };
 
-  const req = https.request(options, res =>
-    console.log(`📡 Webhook [${url}] responded: ${res.statusCode}`)
-  );
+  const logPath = path.join(logDir || "logs/unknown", ".webhook.log");
 
-  req.on("error", err =>
-    console.error(`❌ Webhook to [${url}] failed: ${err.message}`)
-  );
+  console.log(`📡 Attempting webhook emit to: ${url}`);
+
+  const req = protocol.request(options, res => {
+    const stamp = new Date().toISOString();
+    const entry = `[${stamp}] ✅ ${res.statusCode} ${res.statusMessage} → ${url}\n`;
+    fs.appendFileSync(logPath, entry);
+    console.log(`📡 Webhook [${url}] responded: ${res.statusCode}`);
+    res.resume();
+  });
+
+  req.on("error", err => {
+    const stamp = new Date().toISOString();
+    const entry = `[${stamp}] ❌ ERROR: ${err.message} → ${url}\n`;
+    fs.appendFileSync(logPath, entry);
+    console.error(`❌ Webhook to [${url}] failed: ${err.message}`);
+  });
 
   req.write(data);
   req.end();
 }
-
-const order = {
-  sender: { name: "Echo Co.", address: "123 Console Way", contact: "+15559998888" },
-  recipient: { name: "Receiver Inc.", address: "789 Terminal Ave", contact: "+14447776666" },
-  package: { weight_kg: 2.5, dimensions_cm: [30, 20, 15], category: "demo", insured: true },
-  metadata: { external_tracking_id: "TEST-WSL-UUID-01", order_notes: "Final system test" }
-};
 
 let previousLog = null;
 
@@ -70,13 +79,13 @@ function emitChainedLog(order, tenantConfig) {
   const result = wasm.create_order_log(JSON.stringify(payload));
 
   try {
-    const parsed = JSON.parse(result); // ✅ Only parse if it's valid JSON
+    const parsed = JSON.parse(result);
 
     console.log(`📦 [${order.tenant_id}] LOG:\n`, parsed);
 
     saveSnapshot(parsed, tenantConfig.log_dir);
     appendToStream(parsed, tenantConfig.log_dir);
-    emitToWebhook(parsed, tenantConfig.webhook_url);
+    emitToWebhook(parsed, tenantConfig.webhook_url, tenantConfig.log_dir);
 
     previousLog = parsed;
   } catch (err) {

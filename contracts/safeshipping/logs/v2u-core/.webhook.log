@@ -1,0 +1,8 @@
+[2025-06-18T23:27:19.185Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:35:56.094Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:38:52.612Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:42:19.191Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:42:39.391Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:43:14.947Z] ❌ ERROR: connect ECONNREFUSED 127.0.0.1:5050 → http://localhost:5050/logs
+[2025-06-18T23:49:13.644Z] ✅ 200 OK → http://localhost:5050/logs
+[2025-06-18T23:51:05.431Z] ✅ 200 OK → http://localhost:5050/logs
