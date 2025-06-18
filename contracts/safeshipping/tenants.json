@@ -1,0 +1,12 @@
+{
+  "v2u-core": {
+    "api_key": "abc123-def456",
+    "webhook_url": "https://v2u.example.com/logs",
+    "log_dir": "logs/v2u-core"
+  },
+  "node-nexus": {
+    "api_key": "n8x-789-xyz",
+    "webhook_url": "https://nodenexus.net/api/logs",
+    "log_dir": "logs/node-nexus"
+  }
+}

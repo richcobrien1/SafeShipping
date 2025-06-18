@@ -1,20 +1,38 @@
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 4040;
+const AUTH_TOKEN = process.env.SAFESHIP_API_KEY || "secret-dev-key";
+const tenants = require("./tenants.json");
+const { emitChainedLog } = require("./test-event-id");
 
 app.use(express.json()); // Parse JSON automatically
 
-app.post("/log", (req, res) => {
-  const incoming = req.body;
-  console.log("📨 Inbound log received:", incoming);
+function resolveTenant(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
+  const tenant = Object.entries(tenants).find(([_, t]) => t.api_key === token);
 
-  // You can validate here (e.g., ensure `order_id`, `prev_hash`, etc. exist)
+  if (!tenant) return res.status(403).send({ error: "Unauthorized" });
 
-  // Pipe into your core emit system:
-  emitChainedLog(incoming); // from your main file
+  req.tenant_id = tenant[0];
+  req.tenant_config = tenant[1];
+  next();
+}
 
-  res.status(202).send({ status: "accepted", received: true });
+app.post("/log", resolveTenant, (req, res) => {
+  const log = { ...req.body, tenant_id: req.tenant_id };
+  emitChainedLog(log, req.tenant_config); // Modify to route snapshot/stream paths
+  res.status(202).send({ status: "accepted", tenant: req.tenant_id });
 });
+
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1]; // Format: "Bearer token"
+
+  if (token !== AUTH_TOKEN) {
+    return res.status(403).send({ error: "Unauthorized" });
+  }
+
+  next();
+}
 
 app.listen(port, () => {
   console.log(`🛰️ SafeShipping Receiver listening at http://localhost:${port}/log`);
