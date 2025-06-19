@@ -6,7 +6,7 @@ const app = express();
 const PORT = 5055;
 
 function readLedger(tenant) {
-  const ledgerPath = path.resolve(__dirname, "contracts", "safeshipping", "logs", tenant, "ledger.ndjson");
+  const ledgerPath = path.resolve(__dirname, "logs", tenant, "ledger.ndjson");
   if (!fs.existsSync(ledgerPath)) return [];
 
   return fs.readFileSync(ledgerPath, "utf-8")

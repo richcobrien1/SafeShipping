@@ -6,7 +6,7 @@ const app = express();
 const PORT = 5056;
 
 function loadLedger(tenant) {
-  const ledgerPath = path.join(__dirname, "contracts", "safeshipping", "logs", tenant, "ledger.ndjson");
+  const ledgerPath = path.join(__dirname, "logs", tenant, "ledger.ndjson");
   if (!fs.existsSync(ledgerPath)) return [];
 
   return fs.readFileSync(ledgerPath, "utf-8")
@@ -39,16 +39,25 @@ function summarize(tenant) {
 
 app.get("/dashboard/:tenant", (req, res) => {
   const tenant = req.params.tenant;
-  const data = summarize(tenant);
+  const summary = summarize(tenant);
+
+  const view = req.query.view || "html"; // default to HTML
+
+  if (view === "raw" || req.headers.accept?.includes("application/json")) {
+    return res.json(summary);
+  }
+
+  // Otherwise serve pretty HTML
   res.send(`
     <h2>📊 SafeShipping Dashboard: ${tenant}</h2>
+    <p><a href="/dashboard/${tenant}?view=raw">🔍 View raw JSON</a></p>
     <ul>
-      <li>Total orders: ${data.total_orders}</li>
-      <li>Orders today: ${data.orders_today}</li>
-      <li>Total weight shipped: ${data.total_weight_kg} kg</li>
-      <li>Insured packages: ${data.insured_count}</li>
-      <li>Unique recipients: ${data.unique_recipients}</li>
-      <li>Last event timestamp: ${data.last_event_ts}</li>
+      <li>Total orders: ${summary.total_orders}</li>
+      <li>Orders today: ${summary.orders_today}</li>
+      <li>Total weight: ${summary.total_weight_kg} kg</li>
+      <li>Insured count: ${summary.insured_count}</li>
+      <li>Unique recipients: ${summary.unique_recipients}</li>
+      <li>Last event timestamp: ${summary.last_event_ts}</li>
     </ul>
   `);
 });

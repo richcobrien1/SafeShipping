@@ -9,7 +9,7 @@ if (!tenant || !key || !value) {
 }
 
 const primary = path.resolve(__dirname, "logs", tenant, "ledger.ndjson");
-const fallback = path.resolve(__dirname, "contracts", "safeshipping", "logs", tenant, "ledger.ndjson");
+const fallback = path.resolve(__dirname, "logs", tenant, "ledger.ndjson");
 
 const ledgerPath = fs.existsSync(primary) ? primary : fallback;
 
