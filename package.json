@@ -1,5 +1,28 @@
 {
   "dependencies": {
+    "axios": "^1.10.0",
     "express": "^5.1.0"
-  }
+  },
+  "name": "safeshipping",
+  "version": "1.0.0",
+  "description": "SafeShipping is a blockchain-based logistics platform using smart contracts, decentralized oracles, and IoT integrations to automate, secure, and verify global shipping workflows.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/richcobrien1/SafeShipping.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/richcobrien1/SafeShipping/issues"
+  },
+  "homepage": "https://github.com/richcobrien1/SafeShipping#readme"
 }

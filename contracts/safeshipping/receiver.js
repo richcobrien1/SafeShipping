@@ -20,17 +20,29 @@ function resolveTenant(req, res, next) {
 
 app.post("/log", resolveTenant, (req, res) => {
   const log = { ...req.body, tenant_id: req.tenant_id };
-  emitChainedLog(log, req.tenant_config); // Modify to route snapshot/stream paths
+  emitChainedLog(log, req.tenant_config);
   res.status(202).send({ status: "accepted", tenant: req.tenant_id });
 });
 
-function authMiddleware(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1]; // Format: "Bearer token"
+// 🔁 New: Replay-compatible route for `/webhook/:tenant`
+app.post("/webhook/:tenant", (req, res) => {
+  const { tenant } = req.params;
+  const tenant_config = tenants[tenant];
 
+  if (!tenant_config) {
+    return res.status(404).send({ error: `Tenant '${tenant}' not found` });
+  }
+
+  const log = { ...req.body, tenant_id: tenant };
+  emitChainedLog(log, tenant_config);
+  res.status(202).send({ status: "accepted", tenant });
+});
+
+function authMiddleware(req, res, next) {
+  const token = req.headers.authorization?.split(" ")[1];
   if (token !== AUTH_TOKEN) {
     return res.status(403).send({ error: "Unauthorized" });
   }
-
   next();
 }
 

@@ -10,7 +10,7 @@ if (!tenant || !eventId) {
 }
 
 const ledgerPath = path.resolve(__dirname, "logs", tenant, "ledger.ndjson");
-const targetUrl = `http://localhost:5005/webhook/${tenant}`; // or your real endpoint
+const targetUrl = `http://localhost:4040/webhook/${tenant}`; // or your real endpoint
 
 if (!fs.existsSync(ledgerPath)) {
   console.error("❌ Ledger not found:", ledgerPath);

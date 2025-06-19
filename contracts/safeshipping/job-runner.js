@@ -2,8 +2,9 @@ const fs = require("fs");
 const path = require("path");
 const http = require("http");
 const https = require("https");
+const { retryQueue } = require("./config");
 
-const tenantDir = path.join(__dirname, "failures");
+const tenantDir = path.join(__dirname, "contracts", "safeshipping", "failures");
 
 if (!fs.existsSync(tenantDir)) {
   fs.mkdirSync(tenantDir, { recursive: true });
@@ -11,7 +12,7 @@ if (!fs.existsSync(tenantDir)) {
 const tenants = fs.readdirSync(tenantDir);
 
 tenants.forEach(tenant => {
-  const retryPath = path.join(tenantDir, tenant, ".retry.ndjson");
+  const retryPath = retryQueue(tenant);
   if (!fs.existsSync(retryPath)) return;
 
   const lines = fs.readFileSync(retryPath, "utf-8").split("\n").filter(Boolean);

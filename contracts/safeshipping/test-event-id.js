@@ -68,7 +68,8 @@ function emitToWebhook(log, url, logDir = null) {
 
     // New: queue for retry
     const tenantId = tenantNameFromPath(logPath); // function we'll add
-    const retryPath = path.join(__dirname, "failures", tenantId, ".retry.ndjson");
+    const { retryQueue } = require("./config");
+    const retryPath = retryQueue(tenantId);
     if (!fs.existsSync(path.dirname(retryPath))) fs.mkdirSync(path.dirname(retryPath), { recursive: true });
     const retryRecord = { url, log, error: err.message, retries: 0, timestamp: stamp };
     fs.appendFileSync(retryPath, JSON.stringify(retryRecord) + "\n");
