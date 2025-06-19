@@ -9,6 +9,11 @@ function hashLog(log) {
   return crypto.createHash("sha256").update(JSON.stringify(log)).digest("hex");
 }
 
+function tenantNameFromPath(logPath) {
+  const match = logPath.match(/logs[\\/](.*?)[\\/]/);
+  return match ? match[1] : "unknown";
+}
+
 function saveSnapshot(log, dir) {
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
@@ -60,7 +65,15 @@ function emitToWebhook(log, url, logDir = null) {
     const entry = `[${stamp}] ❌ ERROR: ${err.message} → ${url}\n`;
     fs.appendFileSync(logPath, entry);
     console.error(`❌ Webhook to [${url}] failed: ${err.message}`);
+
+    // New: queue for retry
+    const tenantId = tenantNameFromPath(logPath); // function we'll add
+    const retryPath = path.join(__dirname, "failures", tenantId, ".retry.ndjson");
+    if (!fs.existsSync(path.dirname(retryPath))) fs.mkdirSync(path.dirname(retryPath), { recursive: true });
+    const retryRecord = { url, log, error: err.message, retries: 0, timestamp: stamp };
+    fs.appendFileSync(retryPath, JSON.stringify(retryRecord) + "\n");
   });
+
 
   req.write(data);
   req.end();
