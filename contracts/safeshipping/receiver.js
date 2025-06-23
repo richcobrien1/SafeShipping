@@ -1,6 +1,12 @@
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 4040;
+
+const PORT = process.env.PORT_RECEIVER || 4040;
+
+app.listen(PORT, () => {
+  console.log(`🛰️ SafeShipping Receiver listening at http://localhost:${PORT}`);
+});
+
 const AUTH_TOKEN = process.env.SAFESHIP_API_KEY || "secret-dev-key";
 const tenants = require("./tenants.json");
 const { emitChainedLog } = require("./test-event-id");
@@ -45,7 +51,3 @@ function authMiddleware(req, res, next) {
   }
   next();
 }
-
-app.listen(port, () => {
-  console.log(`🛰️ SafeShipping Receiver listening at http://localhost:${port}/log`);
-});
