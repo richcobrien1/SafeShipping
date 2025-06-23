@@ -6,7 +6,7 @@ TENANT_ID="v2u-core"
 TARGET_PORT=${PORT_RECEIVER:-4040}
 
 LINE=${1:-1}
-EVENT=$(sed -n "${LINE}p" "${LEDGER_FILE}" | jq 'del(.@timestamp) + { "replayed": true }')
+EVENT=$(sed -n "${LINE}p" "${LEDGER_FILE}" | jq 'del(."@timestamp") + { "replayed": true }')
 
 if [ -z "$EVENT" ]; then
   echo "❌ Could not extract event from line ${LINE} in ${LEDGER_FILE}"
