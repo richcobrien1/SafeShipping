@@ -1,2 +1,14 @@
 {"event":"orderCreated","event_id":"135b7e6d-71f6-4a69-a760-9f6870f9f056","sender":"Demo Sender","recipient":"Demo Receiver","tracking_id":"TRACK-DEMO-128","insured":true,"dimensions_cm":[30,20,15],"weight_kg":2.2,"timestamp_utc":"2025-06-23T16:47:15Z","tenant_id":"v2u-core","@timestamp":"2025-06-23T16:47:16.214Z"}
 {"event":"orderCreated","event_id":"135b7e6d-71f6-4a69-a760-9f6870f9f056","sender":"Demo Sender","recipient":"Demo Receiver","tracking_id":"TRACK-DEMO-128","insured":true,"dimensions_cm":[30,20,15],"weight_kg":2.2,"timestamp_utc":"2025-06-23T16:47:15Z","tenant_id":"v2u-core","replayed":true,"@timestamp":"2025-06-23T16:53:55.083Z"}
+{"event":"orderCreated","event_id":"135b7e6d-71f6-4a69-a760-9f6870f9f056","sender":"Demo Sender","recipient":"Demo Receiver","tracking_id":"TRACK-DEMO-128","insured":true,"dimensions_cm":[30,20,15],"weight_kg":2.2,"timestamp_utc":"2025-06-23T16:47:15Z","tenant_id":"v2u-core","replayed":true,"replayed_from":2,"@timestamp":"2025-06-23T21:25:11.898Z"}
+{"event":"orderCreated","event_id":"135b7e6d-71f6-4a69-a760-9f6870f9f056","sender":"Demo Sender","recipient":"Demo Receiver","tracking_id":"TRACK-DEMO-128","insured":true,"dimensions_cm":[30,20,15],"weight_kg":2.2,"timestamp_utc":"2025-06-23T16:47:15Z","tenant_id":"v2u-core","replayed":true,"@timestamp":"2025-06-23T21:30:40.635Z"}
+{"tracking_id":"TRACK-FAIL-001","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T21:36:51.954Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T21:46:52.020Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T21:49:57.815Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T21:55:40.727Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T22:01:32.481Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T22:04:39.301Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T22:06:31.990Z"}
+{"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","retry_attempt":1,"replayed":true,"@timestamp":"2025-06-23T22:07:18.623Z"}
+{"tracking_id":"TRACK-FAIL-DAEMON","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T22:14:30.645Z"}
+{"tracking_id":"TRACK-FAIL-DAEMON","event":"orderCreated","tenant_id":"v2u-core","retry_attempt":1,"replayed":true,"@timestamp":"2025-06-23T22:14:49.827Z"}
