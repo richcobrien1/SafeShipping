@@ -9,8 +9,9 @@ YELLOW="\033[1;33m"
 CYAN="\033[0;36m"
 RED="\033[0;31m"
 RESET="\033[0m"
+SPINNING=('-' '\' '|' '/')
 
-# Get tenants from args or auto-discover from /logs
+# Get tenants from args or find all
 if [ "$#" -gt 0 ]; then
   TENANTS=("$@")
 else
@@ -25,7 +26,7 @@ for TENANT in "${TENANTS[@]}"; do
     continue
   fi
 
-  echo -e "${CYAN}🔁 Replaying events for tenant '${TENANT}'...${RESET}"
+  echo -e "\n${CYAN}🚚 Replaying events for tenant: ${TENANT}${RESET}"
 
   TOTAL_LINES=$(wc -l < "$RETRY_FILE")
   COUNT=0
@@ -38,10 +39,13 @@ for TENANT in "${TENANTS[@]}"; do
 
     ((COUNT++))
     PROGRESS=$((COUNT * 40 / TOTAL_LINES))
-    BAR=$(printf "%-${PROGRESS}s" "#" | tr ' ' '#')
+    BAR=$(printf "%-${PROGRESS}s" "█" | tr ' ' '█')
     SPACE=$(printf "%-$((40 - PROGRESS))s")
-    printf "\r${GREEN}[%s%s] %d/%d${RESET}" "$BAR" "$SPACE" "$COUNT" "$TOTAL_LINES"
+    SPIN="${SPINNING[COUNT % 4]}"
+    printf "\r${GREEN}%s [%-40s] %3d/%3d${RESET}" "$SPIN" "$BAR$SPACE" "$COUNT" "$TOTAL_LINES"
   done < "$RETRY_FILE"
 
-  echo -e "\n${GREEN}✅ Replay complete for tenant '${TENANT}'.${RESET}\n"
+  echo -e "\n${GREEN}✅ Finished replay for ${TENANT}!${RESET}"
 done
+
+echo -e "\n${CYAN}✨ All done. Retry events blasted back to the receiver. ✨${RESET}"
