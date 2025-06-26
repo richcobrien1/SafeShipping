@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>SafeShipping Replay Dashboard</title>
+  <style>
+    body { font-family: sans-serif; margin: 2rem; background: #f9f9fb; }
+    h1 { font-size: 1.6rem; }
+    label { margin-right: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { padding: 0.5rem; border: 1px solid #ccc; }
+    .replayed { background: #d0f0ff; }
+    .high-retry { background: #fff2cc; }
+  </style>
+</head>
+<body>
+  <h1>📦 SafeShipping Log Viewer</h1>
+
+  <label><input type="checkbox" id="filterReplayed" /> Show Replayed Only</label>
+  <label><input type="checkbox" id="filterHighRetry" /> Highlight Retry ≥ 3</label>
+  <br />
+  <select id="tenantSelect">
+    <option value="v2u-core">v2u-core</option>
+  </select>
+  <button onclick="loadLogs()">Load Logs</button>
+
+  <table id="logTable">
+    <thead>
+      <tr>
+        <th>Tracking ID</th>
+        <th>Event</th>
+        <th>Retry Count</th>
+        <th>Replayed?</th>
+        <th>Timestamp</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    async function loadLogs() {
+      const tenant = document.getElementById("tenantSelect").value;
+      const replayedOnly = document.getElementById("filterReplayed").checked;
+      const highRetryHighlight = document.getElementById("filterHighRetry").checked;
+
+      try {
+        const res = await fetch(`/logs/${tenant}/ledger.ndjson`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const rows = text.trim().split("\n").map(line => JSON.parse(line));
+
+        const tbody = document.querySelector("#logTable tbody");
+        tbody.innerHTML = "";
+
+        rows.forEach(entry => {
+          const isReplayed = entry.replayed === true;
+          const attempts = entry.retry_attempt || 0;
+
+          if (replayedOnly && !isReplayed) return;
+
+          const tr = document.createElement("tr");
+          if (isReplayed) tr.classList.add("replayed");
+          if (attempts >= 3 && highRetryHighlight) tr.classList.add("high-retry");
+
+          tr.innerHTML = `
+            <td>${entry.tracking_id || "-"}</td>
+            <td>${entry.event || "-"}</td>
+            <td>${attempts}</td>
+            <td>${isReplayed ? "✅" : ""}</td>
+            <td>${entry["@timestamp"] || "-"}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (err) {
+        console.error("Failed to load or parse log file:", err);
+        alert("⚠️ Could not load logs. Please check the console for details.");
+      }
+    }
+  </script>
+</body>
+</html>
