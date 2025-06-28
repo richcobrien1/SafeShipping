@@ -9,13 +9,13 @@ const BASE_DIR = process.cwd();
 
 const tenants = require(path.join(BASE_DIR, "receiver/tenants.json"));
 const LOGS_DIR = path.join(BASE_DIR, "logs");
-const FRONTEND_DIR = path.join(BASE_DIR, "frontend");
+const FRONTEND_DIR = path.join(BASE_DIR, "frontend/build");
 
 app.use(express.json());
 
 console.log("🧾 Base Directory:", BASE_DIR);
 
-// Resolve tenant from token
+// Middleware: Resolve tenant from token
 function resolveTenant(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1];
   const tenant = Object.entries(tenants).find(([_, t]) => t.api_key === token);
@@ -25,7 +25,7 @@ function resolveTenant(req, res, next) {
   next();
 }
 
-// Log to ledger
+// Helper: Log to ledger.ndjson
 function logEvent(log, tenant_id) {
   const folder = path.join(LOGS_DIR, tenant_id);
   fs.mkdirSync(folder, { recursive: true });
@@ -34,37 +34,48 @@ function logEvent(log, tenant_id) {
   fs.appendFileSync(file, entry + "\n");
 }
 
-// Log to retry.ndjson
+// Helper: Log to retry.ndjson
 function logRetryEvent(log, tenant_id) {
   const folder = path.join(LOGS_DIR, tenant_id);
   fs.mkdirSync(folder, { recursive: true });
   const file = path.join(folder, "retry.ndjson");
   const attempts = log.retry_attempt || 0;
-  const entry = JSON.stringify({ ...log, retry_attempt: attempts + 1, "@timestamp": new Date().toISOString() });
+  const entry = JSON.stringify({
+    ...log,
+    retry_attempt: attempts + 1,
+    "@timestamp": new Date().toISOString(),
+  });
   fs.appendFileSync(file, entry + "\n");
 }
 
-// POST /log — secure event logging
+// POST /log — secure logging
 app.post("/log", resolveTenant, (req, res) => {
-  const log = { ...req.body, tenant_id: req.tenant_id };
+  const log = {
+    ...req.body,
+    tenant_id: req.tenant_id,
+    "@timestamp": new Date().toISOString(),
+  };
   logEvent(log, req.tenant_id);
   res.status(202).send({ status: "accepted", tenant: req.tenant_id });
 });
 
-// POST /webhook/:tenant — simulate delivery, optional fail
+// POST /webhook/:tenant — simulate webhook event
 app.post("/webhook/:tenant", (req, res) => {
   const { tenant } = req.params;
   const config = tenants[tenant];
   if (!config) return res.status(404).send({ error: `Tenant '${tenant}' not found` });
 
-  const log = { ...req.body, tenant_id: tenant };
+  const log = {
+    ...req.body,
+    tenant_id: tenant,
+    "@timestamp": new Date().toISOString(),
+  };
+
   logEvent(log, tenant);
 
   const simulateFailure = req.query.fail === "true";
-  console.log("🧪 Webhook Query:", req.query, "→ Failure:", simulateFailure);
-
   if (simulateFailure) {
-    console.warn("⚠️ Simulated failure — writing to retry.ndjson");
+    console.warn("⚠️ Simulated failure — logging to retry.ndjson");
     logRetryEvent(log, tenant);
     return res.status(502).send({ status: "failed", queued: true, tenant });
   }
@@ -72,9 +83,14 @@ app.post("/webhook/:tenant", (req, res) => {
   res.status(202).send({ status: "accepted", tenant });
 });
 
-// Serve logs and frontend
+// Serve logs and compiled frontend
 app.use("/logs", express.static(LOGS_DIR));
 app.use("/", express.static(FRONTEND_DIR));
+
+// React Router support for deep linking
+app.get("*", (req, res) => {
+  res.sendFile(path.join(FRONTEND_DIR, "index.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`🛰️ Receiver live at http://localhost:${PORT}`);

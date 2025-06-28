@@ -12,3 +12,6 @@
 {"tracking_id":"TRACK-FAIL-TEST","event":"orderCreated","tenant_id":"v2u-core","retry_attempt":1,"replayed":true,"@timestamp":"2025-06-23T22:07:18.623Z"}
 {"tracking_id":"TRACK-FAIL-DAEMON","event":"orderCreated","tenant_id":"v2u-core","@timestamp":"2025-06-23T22:14:30.645Z"}
 {"tracking_id":"TRACK-FAIL-DAEMON","event":"orderCreated","tenant_id":"v2u-core","retry_attempt":1,"replayed":true,"@timestamp":"2025-06-23T22:14:49.827Z"}
+{"event":"shipment.created","tracking_id":"ZX456789","tenant_id":"v2u-core","@timestamp":"2025-06-26T23:14:50.807Z"}
+{"event":"shipment.created","tracking_id":"ZX000123","location":"Denver","tenant_id":"v2u-core","@timestamp":"2025-06-28T16:52:18.436Z"}
+{"event":"shipment.created","tracking_id":"ZX000123","location":"Centennial","tenant_id":"v2u-core","@timestamp":"2025-06-28T16:54:24.682Z"}
