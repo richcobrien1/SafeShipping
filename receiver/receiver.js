@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT_RECEIVER || 4040;
 const AUTH_TOKEN = process.env.SAFESHIP_API_KEY || "secret-dev-key";
 const BASE_DIR = process.cwd();
+const DEBUG_ROUTES = process.env.DEBUG_ROUTES === "true";
 
 const tenants = require(path.join(BASE_DIR, "receiver/tenants.json"));
 const LOGS_DIR = path.join(BASE_DIR, "logs");
@@ -13,13 +14,29 @@ const FRONTEND_DIR = path.join(BASE_DIR, "frontend/build");
 
 app.use(express.json());
 
+if (DEBUG_ROUTES) {
+  // 🧪 Optional route logging
+  ["use", "get", "post"].forEach((method) => {
+    const original = app[method].bind(app);
+    app[method] = (...args) => {
+      const path = args[0];
+      console.log(`🔍 app.${method} →`, path);
+      return original(...args);
+    };
+  });
+}
+
 console.log("🧾 Base Directory:", BASE_DIR);
 
 // Middleware: Resolve tenant from token
 function resolveTenant(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1];
+  const authHeader = req.headers.authorization || "";
+  const token = authHeader.split(" ")[1] || "";
+  if (!token) return res.status(403).send({ error: "Missing token" });
+
   const tenant = Object.entries(tenants).find(([_, t]) => t.api_key === token);
   if (!tenant) return res.status(403).send({ error: "Unauthorized" });
+
   req.tenant_id = tenant[0];
   req.tenant_config = tenant[1];
   next();
@@ -47,6 +64,11 @@ function logRetryEvent(log, tenant_id) {
   });
   fs.appendFileSync(file, entry + "\n");
 }
+
+// Health check
+app.get("/status", (_, res) => {
+  res.send({ status: "ok", time: new Date().toISOString() });
+});
 
 // POST /log — secure logging
 app.post("/log", resolveTenant, (req, res) => {
